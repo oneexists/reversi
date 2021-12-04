@@ -1,4 +1,4 @@
-package edu.metrostate.ics425.reversi.team_sm3684.sl7726.controller;
+package edu.metrostate.ics425.reversi.sm3684.sl7726.controller;
 
 import java.io.IOException;
 
@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.metrostate.ics425.reversi.team_sm3684.sl7726.model.Game;
+import edu.metrostate.ics425.reversi.sm3684.sl7726.model.Game;
 
 /**
  * Servlet implementation class PlayGameServlet

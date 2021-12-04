@@ -1,4 +1,4 @@
-package edu.metrostate.ics425.reversi.team_sm3684.sl7726.model;
+package edu.metrostate.ics425.reversi.sm3684.sl7726.model;
 
 import java.io.Serializable;
 import java.util.Arrays;
