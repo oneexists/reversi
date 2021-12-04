@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>P5_Team_SMSL_Reversi</groupId>
-  <artifactId>P5_Team_SMSL_Reversi</artifactId>
+  <groupId>P5_SM3684_SL7726_Reversi</groupId>
+  <artifactId>P5_SM3684_SL7726_Reversi</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
-  <name>P5_Team_SMSL_Reversi</name>
+  <name>P5_SM3684_SL7726_Reversi</name>
   <description/>
   <properties>
     <webVersion>4.0</webVersion>
