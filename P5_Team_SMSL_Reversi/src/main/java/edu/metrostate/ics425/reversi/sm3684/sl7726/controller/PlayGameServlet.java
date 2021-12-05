@@ -51,7 +51,9 @@ public class PlayGameServlet extends HttpServlet {
 			int locInt = Integer.parseInt(loc);
 			boolean takeTurn = game.placeDisk(locInt);
 			if (!takeTurn) {
-				// TODO invalid move
+				request.setAttribute("err", "Invalid move");
+			} else {
+				request.setAttribute("err", null);
 			}
 			
 			// store
