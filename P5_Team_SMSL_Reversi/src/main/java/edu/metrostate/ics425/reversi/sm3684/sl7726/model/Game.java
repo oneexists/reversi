@@ -14,6 +14,22 @@ public class Game implements Serializable {
 	enum Disk {
 		LIGHT, DARK;
 	}
+	enum Column {
+		a(new int[] {0, 1, 2, 3, 4, 5, 6, 7}),
+		b(new int[] {8, 9, 10, 11, 12, 13, 14 ,15}),
+		c(new int[] {16, 17, 18, 19, 20, 21, 22, 23}),
+		d(new int[] {24, 25, 26, 27, 28, 29, 30, 31}),
+		e(new int[] {32, 33, 34, 35, 36, 37, 38, 39}),
+		f(new int[] {40, 41, 42, 43, 44, 45, 46, 47}),
+		g(new int[] {48, 49, 50, 51, 52, 53, 54, 55}),
+		h(new int[] {56, 57, 58, 59, 60, 61, 62, 63});
+
+		private int[] column;
+		
+		Column(int[] column) {
+			this.column = column;
+		}
+	}
 	enum Rows {
 		HORIZONTAL(new int[][] { 
 			{0, 1, 2, 3, 4, 5, 6, 7}, 
@@ -182,6 +198,17 @@ public class Game implements Serializable {
 		Arrays.stream(row).forEach(x -> disks[x] = currentPlayer);
 	}
 	
+	public Column getColumn(int loc) {
+		for (Column column : Column.values()) {
+			for (var val : column.column) {
+				if (val == loc) {
+					return column;
+				}
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * Returns Disk value of the current player
 	 * 
@@ -257,12 +284,16 @@ public class Game implements Serializable {
 			for (int[] row : findRows(loc)) {
 				flipDisks(row);
 			}
-			LOGGER.info(currentPlayer + " selected " + loc + ".");
+			LOGGER.info(currentPlayer + " selected " + getLoc(loc) + ".");
 			disks[loc] = currentPlayer;
 			nextPlayer();
 			return true;
 		}
 		return false;
+	}
+
+	public String getLoc(int loc) {
+		return getColumn(loc).toString() + loc/8;
 	}
 
 	private boolean isEmpty(Disk disk) {
@@ -273,7 +304,6 @@ public class Game implements Serializable {
 		return space >= 0 && space < NUM_DISKS;
 	}
 	
-	// TODO evaluate if game is over
 	public boolean isOver() {
 		if (passMove()) {
 			nextPlayer();
