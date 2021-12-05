@@ -102,6 +102,15 @@ public class Game implements Serializable {
 		disks[35] = Disk.DARK;
 	}
 
+	public Disk getWinner() {
+		if (getDarkScore() > getLightScore()) {
+			return Disk.DARK;
+		} else if (getLightScore() > getDarkScore()) {
+			return Disk.LIGHT;
+		} else {
+			return null;
+		}
+	}
 	private boolean isOccupied(int loc) {
 		return (disks[loc] != null && disks[loc] != currentPlayer);
 	}
@@ -263,10 +272,11 @@ public class Game implements Serializable {
 	}
 	
 	// TODO evaluate if game is over
-	private boolean isOver() {
+	public boolean isOver() {
 		if (passMove()) {
 			nextPlayer();
 			if (passMove()) {
+				getWinner();
 				return true;
 			}
 		}

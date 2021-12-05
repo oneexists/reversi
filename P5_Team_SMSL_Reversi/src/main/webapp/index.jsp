@@ -56,10 +56,10 @@
   			<td> 
   			<c:choose>
   			<c:when test="${empty space }">
-  				<button type="submit" name="loc" class="space" value="${stat.index }">${stat.index }</button>
+  				<button type="submit" name="loc" class="space" value="${stat.index }"></button>
   			</c:when>
   			<c:otherwise>
-  				<span class="space ${space }">${space }</span>
+  				<span class="space ${space }"></span>
   			</c:otherwise>
   			</c:choose>
   			
@@ -73,8 +73,8 @@
   		<ul style="background-color:darkgreen; color:white;">
   		<li>Current Player: ${game.currentPlayer }</li>
   		<li>Current Score: DARK ${game.darkScore} - LIGHT ${game.lightScore}</li>
-  		<li>Game Over: </li>
-  		<li>Winner: </li>
+  		<li>Game Over: ${game.over}</li>
+  		<li>Winner: ${game.winner}</li>
   		</ul>
   		<button class="submit" name="quit" >New Game</button>
   		</td>
