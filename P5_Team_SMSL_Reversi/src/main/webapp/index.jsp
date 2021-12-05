@@ -73,10 +73,14 @@
   		<ul style="background-color:darkgreen; color:white;">
   		<li>Current Player: ${game.currentPlayer }</li>
   		<li>Current Score: DARK ${game.darkScore} - LIGHT ${game.lightScore}</li>
-  		<li>Game Over: ${game.over}</li>
+  		<c:if test="${game.over}">
   		<li>Winner: ${game.winner}</li>
+  		</c:if>
   		</ul>
   		<button class="submit" name="quit" >New Game</button>
+  		<c:if test="${pass && !game.over}">
+  		<button class="submit" name="pass">Pass Move</button>
+  		</c:if>
   		</td>
     	</tr>
     </table>

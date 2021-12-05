@@ -55,6 +55,11 @@ public class PlayGameServlet extends HttpServlet {
 			} else {
 				request.setAttribute("err", null);
 			}
+			if (game.passMove()) {
+				request.setAttribute("pass", true);
+			} else {
+				request.setAttribute("pass", false);
+			}
 			
 			// store
 			request.getSession().setAttribute("game", game);
