@@ -318,4 +318,37 @@ public class Game implements Serializable {
 	private boolean isValidMove(int loc) {
 		return !isOver() && isOnBoard(loc) && isEmpty(disks[loc]);
 	}
+
+	private int[] insertMove(int[] moves, int newMove) {
+		if (moves == null) {
+			int[] newMoves = new int[1];
+			newMoves[0] = newMove;
+			return newMoves;
+		} else {
+			int[] newMoves = new int[moves.length + 1];
+			for (int i=0; i<moves.length; i++) {
+				newMoves[i] = moves[i];
+			}
+			newMoves[moves.length] = newMove;
+			newMoves = Arrays.stream(newMoves).distinct().toArray();
+			return newMoves;
+		}
+	}
+	
+	public int[] findMoves() {
+		int[] moves = null;
+		for (Rows rows : Rows.values()) {
+			for (var row : rows.rows) {
+				for (int space : row) {
+					if (disks[space] == null) {
+						List<int[]> foundRow = findRows(space);
+						if (!foundRow.isEmpty()) {
+							moves = insertMove(moves, space);
+						}
+					}
+				}
+			}
+		}
+		return moves;
+	}
 }

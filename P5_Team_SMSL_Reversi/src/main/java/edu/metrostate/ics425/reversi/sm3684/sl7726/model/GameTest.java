@@ -81,6 +81,14 @@ class GameTest {
 		assertEquals(Disk.DARK, game.getDisks()[35]);
 	}
 	
+	@Test
+	void testFindMoves() {
+		int[] openingMoves = {19, 26, 37, 44};
+		for (int i=0; i<openingMoves.length; i++) {
+			assertEquals(openingMoves[i], game.findMoves()[i]);
+		}
+	}
+	
 //	@Test
 //	void testIsOccupied() {
 //		assertTrue(game.isOccupied(27));
