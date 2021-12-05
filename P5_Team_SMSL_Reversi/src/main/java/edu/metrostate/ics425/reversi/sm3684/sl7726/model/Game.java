@@ -138,7 +138,7 @@ public class Game implements Serializable {
 	}
 
 	private int[] getRowUp(int[] checkRow) {
-		end: for (int i=0; i<checkRow.length; i++) {
+		end: for (int i=0; i<checkRow.length-1; i++) {
 			if (isOccupied(checkRow[i])) {
 				if (disks[checkRow[i+1]] == currentPlayer) {
 					return Arrays.copyOfRange(checkRow, 0, i+1);
@@ -251,7 +251,6 @@ public class Game implements Serializable {
 			nextPlayer();
 			return true;
 		}
-		disks[loc] = null;
 		return false;
 	}
 

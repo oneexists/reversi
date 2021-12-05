@@ -25,10 +25,33 @@ class GameTest {
 		Disk[] board = game.getDisks();
 		assertEquals(Disk.DARK, board[43]);
 	}
+
 	@Test
-	void testValidMove() {
-		// valid move is valid
-		// invalid move is invalid
+	void testPassMove() {
+		assertFalse(game.passMove());
+	}
+	
+	@Test
+	void testEdge() {
+		game.placeDisk(44);
+		game.placeDisk(45);
+		game.placeDisk(37);
+		game.placeDisk(43);
+		game.placeDisk(52);
+		game.placeDisk(53);
+		game.placeDisk(54);
+		game.placeDisk(63);
+		game.placeDisk(55);
+		game.placeDisk(47);
+		game.placeDisk(51);
+		game.placeDisk(29);
+		game.placeDisk(18);
+		game.placeDisk(62);
+		game.placeDisk(42);
+		game.placeDisk(60);
+		game.placeDisk(61);
+		assertEquals(Disk.DARK, game.getDisks()[53]);
+		assertEquals(Disk.DARK, game.getDisks()[52]);
 	}
 	
 	@Test
