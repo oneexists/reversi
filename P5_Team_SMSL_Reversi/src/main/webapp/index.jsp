@@ -13,6 +13,7 @@
 }
 
 .space {
+	background-color: green;
 	height: 50px;
 	width: 50px;
 	line-height: 50px;
