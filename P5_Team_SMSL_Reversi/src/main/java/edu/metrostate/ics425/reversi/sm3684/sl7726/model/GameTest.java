@@ -12,18 +12,18 @@ class GameTest {
 	@Test
 	void testInitialBoard() {
 		Disk[] disks = game.getDisks();
-		assertEquals(Disk.DARK, disks[27]);
-		assertEquals(Disk.DARK, disks[36]);
-		assertEquals(Disk.LIGHT, disks[28]);
-		assertEquals(Disk.LIGHT, disks[35]);
+		assertEquals(Disk.LIGHT, disks[27]);
+		assertEquals(Disk.LIGHT, disks[36]);
+		assertEquals(Disk.DARK, disks[28]);
+		assertEquals(Disk.DARK, disks[35]);
 	}
 	
 	@Test 
 	void testPlaceDisk() {
 		assertEquals(Disk.DARK, game.getCurrentPlayer());
-		game.placeDisk(43);
-		Disk[] board = game.getDisks();
-		assertEquals(Disk.DARK, board[43]);
+		game.placeDisk(44);
+		Disk[] disks = game.getDisks();
+		assertEquals(Disk.DARK, disks[44]);
 	}
 
 	@Test

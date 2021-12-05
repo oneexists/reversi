@@ -56,7 +56,7 @@
   			<td> 
   			<c:choose>
   			<c:when test="${empty space }">
-  				<button type="submit" name="loc" class="space" value="${stat.index }"></button>
+  				<button type="submit" name="loc" class="space" value="${stat.index }">${stat.index}</button>
   			</c:when>
   			<c:otherwise>
   				<span class="space ${space }"></span>

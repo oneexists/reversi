@@ -120,7 +120,9 @@ public class Game implements Serializable {
 			if (row[i] == loc) {
 				if (i<row.length-2) {
 					if (isOccupied(row[i+1])) {
-						return getRowUp(Arrays.copyOfRange(row, i+1, row.length));
+						if (getRowUp(Arrays.copyOfRange(row, i+1, row.length)) != null) {
+							return getRowUp(Arrays.copyOfRange(row, i+1, row.length));							
+						}
 					}					
 				}
 				if (i>1) {
