@@ -1,7 +1,9 @@
 package edu.metrostate.ics425.reversi.sm3684.sl7726.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -100,53 +102,69 @@ public class Game implements Serializable {
 		disks[35] = Disk.DARK;
 	}
 
+	private boolean isOccupied(int loc) {
+		return (disks[loc] != null && disks[loc] != currentPlayer);
+	}
+	
 	private int[] checkRow(int[] row, int loc) {
-		
-		int start = -1;
-		int startLoc = -1;
-		int end = -1;
-		int endLoc = -1;
-		int step = -1;
 		for (int i=0; i<row.length; i++) {
-			if (start == -1 && disks[row[i]] != null) {
-				if (i>0) {
-					startLoc = i-1;
+			if (row[i] == loc) {
+				if (i<row.length-2) {
+					if (isOccupied(row[i+1])) {
+						return getRowUp(Arrays.copyOfRange(row, i+1, row.length));
+					}					
 				}
-				start = i;
-			}
-			if (start != -1 && disks[row[i]] != null) {
-				if (i<row.length-1) {
-					endLoc = i+1;
+				if (i>1) {
+					if (isOccupied(row[i-1])) {
+						return getRowDown(Arrays.copyOfRange(row, 0, i));
+					}					
 				}
-				step = i;
-			}
-		}
-		end = step;
-		if (start != -1 && end != -1) {				
-			if (disks[row[start]] != currentPlayer  && disks[row[end]] == currentPlayer && row[startLoc] == loc) {
-				return Arrays.copyOfRange(row, startLoc, end);
-			}
-			if (disks[row[end]] != currentPlayer && disks[row[start]] == currentPlayer && row[endLoc] == loc) {
-				return Arrays.copyOfRange(row, start, endLoc);
 			}
 		}
 		return null;
 	}
-	
-	private int[] findRow(int loc) {
+
+	private int[] getRowDown(int[] checkRow) {
+		end: for (int i=checkRow.length-1; i>0; i--) {
+			if (isOccupied(checkRow[i])) {
+				if (disks[checkRow[i-1]] == currentPlayer) {
+					return Arrays.copyOfRange(checkRow, i-1, checkRow.length);
+				}
+			} else {
+				break end;
+			}
+		}
+		return null;
+	}
+
+	private int[] getRowUp(int[] checkRow) {
+		end: for (int i=0; i<checkRow.length; i++) {
+			if (isOccupied(checkRow[i])) {
+				if (disks[checkRow[i+1]] == currentPlayer) {
+					return Arrays.copyOfRange(checkRow, 0, i+1);
+				}
+			} else {
+				break end;
+			}
+		}
+		return null;
+	}
+
+	private List<int[]> findRows(int loc) {
+		List<int[]> foundRows = new ArrayList<>();
 		for (Rows rows : Rows.values()) {
 			for (var row : rows.rows) {
 				for (var space : row) {
 					if (space == loc) {
-						int[] isRow = checkRow(row, loc);
-						if (isRow != null) {
-							return isRow;
+						int[] foundRow = checkRow(row, loc);
+						if (foundRow != null) {
+							foundRows.add(foundRow);
 						}
 					}
 				}
 			}
 		}
-		return null;
+		return foundRows;
 	}
 	
 	private void flipDisks(int[] row) {
@@ -206,7 +224,7 @@ public class Game implements Serializable {
 			for (var row : rows.rows) {
 				for (var space : row) {
 					if (disks[space] == null) {
-						int[] foundRow = findRow(space);
+						List<int[]> foundRow = findRows(space);
 						if (foundRow != null) {
 							return false;
 						}
@@ -224,8 +242,10 @@ public class Game implements Serializable {
 	 * @param loc location of the disk
 	 */
 	public boolean placeDisk(int loc) {
-		if (isValidMove(loc) && findRow(loc) != null) {
-			flipDisks(findRow(loc));
+		if (isValidMove(loc) && !findRows(loc).isEmpty()) {
+			for (int[] row : findRows(loc)) {
+				flipDisks(row);
+			}
 			LOGGER.info(currentPlayer + " selected " + loc + ".");
 			disks[loc] = currentPlayer;
 			nextPlayer();
@@ -238,9 +258,11 @@ public class Game implements Serializable {
 	private boolean isEmpty(Disk disk) {
 		return (disk == null);
 	}
+	
 	private boolean isOnBoard(int space) {
 		return space >= 0 && space < NUM_DISKS;
 	}
+	
 	// TODO evaluate if game is over
 	private boolean isOver() {
 		if (passMove()) {
@@ -251,6 +273,7 @@ public class Game implements Serializable {
 		}
 		return false;
 	}
+	
 	private boolean isValidMove(int loc) {
 		return !isOver() && isOnBoard(loc) && isEmpty(disks[loc]);
 	}

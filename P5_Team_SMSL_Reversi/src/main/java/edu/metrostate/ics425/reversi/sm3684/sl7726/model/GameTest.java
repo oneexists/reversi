@@ -34,10 +34,15 @@ class GameTest {
 		assertEquals(Disk.DARK, game.getDisks()[44]);
 	}
 	
-	@Test
-	void testFlipDisks() {
-		game.placeDisk(26);
-		assertEquals(Disk.DARK, game.getDisks()[26]);
-		assertEquals(Disk.DARK, game.getDisks()[27]);
-	}
+//	@Test
+//	void testIsOccupied() {
+//		assertTrue(game.isOccupied(27));
+//		assertTrue(game.isOccupied(36));
+//	}
+//	@Test
+//	void testFlipDisks() {
+//		game.flipDisks(new int[] {26, 27});
+//		assertEquals(Disk.DARK, game.getDisks()[26]);
+//		assertEquals(Disk.DARK, game.getDisks()[27]);
+//	}
 }
