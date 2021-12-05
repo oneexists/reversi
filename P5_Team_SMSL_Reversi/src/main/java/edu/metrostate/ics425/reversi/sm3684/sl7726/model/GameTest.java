@@ -34,6 +34,33 @@ class GameTest {
 		assertEquals(Disk.DARK, game.getDisks()[44]);
 	}
 	
+	@Test
+	void testLookBothWays() {
+		game.placeDisk(44);
+		game.placeDisk(45);
+		game.placeDisk(19);
+		game.placeDisk(34);
+		game.placeDisk(41);
+		game.placeDisk(11);
+		game.placeDisk(37);
+		game.placeDisk(43);
+		game.placeDisk(10);
+		game.placeDisk(9);
+		game.placeDisk(3);
+		game.placeDisk(12);
+		game.placeDisk(1);
+		game.placeDisk(20);
+		game.placeDisk(53);
+		game.placeDisk(33);
+		game.placeDisk(25);
+		game.placeDisk(32);
+		game.placeDisk(8);
+		game.placeDisk(18);
+		game.placeDisk(26);
+		assertEquals(Disk.DARK, game.getDisks()[18]);
+		assertEquals(Disk.DARK, game.getDisks()[35]);
+	}
+	
 //	@Test
 //	void testIsOccupied() {
 //		assertTrue(game.isOccupied(27));
