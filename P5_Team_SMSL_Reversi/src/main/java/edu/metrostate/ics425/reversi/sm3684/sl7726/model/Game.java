@@ -1,14 +1,13 @@
-package edu.metrostate.ics425.reversi.sm3684.sl7726.model;
+package edu.metrostate.ics425.reversi.team_smsl.model;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.logging.Logger;
 
 /**
  * @author skylar
  *
  */
 public class Game implements Serializable {
+	
 	enum Disk {
 		LIGHT, DARK;
 	}
@@ -34,7 +33,7 @@ public class Game implements Serializable {
 			{7, 15, 23, 31, 39, 47, 55, 63}
 		}), 
 		DIAGONAL(new int[][] {
-			{40, 49, 58}, 
+			{40, 49, 48}, 
 			{32, 41, 50, 59},
 			{24, 33, 42, 51, 60}, 
 			{16, 25, 34, 43, 52, 61},
@@ -55,18 +54,7 @@ public class Game implements Serializable {
 			{58, 51, 44, 37, 30, 23},
 			{59, 52, 45, 38, 31},
 			{60, 53, 46, 39},
-			{61, 54, 47},
-			{2, 9, 16},
-			{3, 10, 17, 24},
-			{4, 11, 18, 25, 32},
-			{5, 12, 19, 26, 33, 40},
-			{6, 13, 20, 27, 34, 41, 48},
-			{7, 14, 21, 28, 35, 42, 49, 56},
-			{15, 22, 29, 36, 43, 50, 57},
-			{23, 30, 37, 44, 51, 58},
-			{31, 38, 45, 52, 59}, 
-			{39, 46, 53, 60},
-			{47, 54, 61}
+			{61, 54, 47}
 		});
 		
 		private int[][] rows;
@@ -80,8 +68,7 @@ public class Game implements Serializable {
 	 * Version of the bean
 	 */
 	private static final long serialVersionUID = 202111001L;
-	private static final Logger LOGGER = Logger.getLogger("model.Game");
-
+	
 	private static final int NUM_DISKS = 64;
 	private Disk[] disks;
 	private Disk currentPlayer;
@@ -92,65 +79,48 @@ public class Game implements Serializable {
 	public Game() {
 		disks = new Disk[NUM_DISKS];
 		currentPlayer = Disk.DARK;
-		
 		// set initial pieces
-		disks[27] = Disk.LIGHT;
-		disks[36] = Disk.LIGHT;
-		disks[28] = Disk.DARK;
-		disks[35] = Disk.DARK;
+		disks[27] = Disk.DARK;
+		disks[36] = Disk.DARK;
+		disks[28] = Disk.LIGHT;
+		disks[35] = Disk.LIGHT;
+	}
+	
+	/**
+	 * Places disk on specified location
+	 * If game is not over, set to next player's turn
+	 * 
+	 * @param loc location of the disk
+	 */
+	public void placeDisk(int loc) {
+		if (disks[loc] == null && isValidMove(loc)) {
+			disks[loc] = currentPlayer;
+			if (!isOver()) {
+				nextPlayer();				
+			}
+		}
+	}
+	// findValidMoves()
+	// getWinner()
+	
+	private boolean isOver() {
+		// TODO evaluate if game is over
+		return false;
 	}
 
-	private int[] checkRow(int[] row, int loc) {
-		
-		int start = -1;
-		int startLoc = -1;
-		int end = -1;
-		int endLoc = -1;
-		int step = -1;
-		for (int i=0; i<row.length; i++) {
-			if (start == -1 && disks[row[i]] != null) {
-				if (i>0) {
-					startLoc = i-1;
-				}
-				start = i;
-			}
-			if (start != -1 && disks[row[i]] != null) {
-				if (i<row.length-1) {
-					endLoc = i+1;
-				}
-				step = i;
-			}
-		}
-		end = step;
-		if (start != -1 && end != -1) {				
-			if (disks[row[start]] != currentPlayer  && disks[row[end]] == currentPlayer && row[startLoc] == loc) {
-				return Arrays.copyOfRange(row, startLoc, end);
-			}
-			if (disks[row[end]] != currentPlayer && disks[row[start]] == currentPlayer && row[endLoc] == loc) {
-				return Arrays.copyOfRange(row, start, endLoc);
-			}
-		}
-		return null;
+	private boolean isValidMove(int loc) {
+		// TODO validate move
+		return isEmpty(loc);
 	}
-	
-	private int[] findRow(int loc) {
-		for (Rows rows : Rows.values()) {
-			for (var row : rows.rows) {
-				for (var space : row) {
-					if (space == loc) {
-						int[] isRow = checkRow(row, loc);
-						if (isRow != null) {
-							return isRow;
-						}
-					}
-				}
-			}
-		}
-		return null;
+	private boolean isEmpty(int loc) {
+		return disks[loc] == null;
 	}
-	
-	private void flipDisks(int[] row) {
-		Arrays.stream(row).forEach(x -> disks[x] = currentPlayer);
+
+	/**
+	 * @return the disks
+	 */
+	public Disk[] getDisks() {
+		return disks.clone();
 	}
 	
 	/**
@@ -163,95 +133,10 @@ public class Game implements Serializable {
 	}
 	
 	/**
-	 * Returns the disks on the board
-	 * 
-	 * @return the disks
+	 * Sets current player to next player
 	 */
-	public Disk[] getDisks() {
-		return disks.clone();
-	}
-	
-	/**
-	 * Returns the score for the Disk.DARK player
-	 * 
-	 * @return Disk.DARK score
-	 */
-	public int getDarkScore() {
-		int score = 0;
-		for (Disk disk : disks) {
-			if (disk == Disk.DARK) { score++; }
-		}
-		return score;
-	}
-	
-	/**
-	 * Returns the score for the Disk.LIGHT player
-	 * 
-	 * @return Disk.LIGHT score
-	 */
-	public int getLightScore() {
-		int score = 0;
-		for (Disk disk : disks) {
-			if (disk == Disk.LIGHT) { score++; }
-		}
-		return score;
-	}
-	
-	private void nextPlayer() {
+	public void nextPlayer() {
 		this.currentPlayer = (getCurrentPlayer() == Disk.DARK) ? Disk.LIGHT : Disk.DARK;
 	}
-	
-	public boolean passMove() {
-		for (Rows rows : Rows.values()) {
-			for (var row : rows.rows) {
-				for (var space : row) {
-					if (disks[space] == null) {
-						int[] foundRow = findRow(space);
-						if (foundRow != null) {
-							return false;
-						}
-					}
-				}
-			}
-		}
-		return true;
-	}
-	
-	/**
-	 * Places disk on specified location
-	 * If game is not over, set to next player's turn
-	 * 
-	 * @param loc location of the disk
-	 */
-	public boolean placeDisk(int loc) {
-		if (isValidMove(loc) && findRow(loc) != null) {
-			flipDisks(findRow(loc));
-			LOGGER.info(currentPlayer + " selected " + loc + ".");
-			disks[loc] = currentPlayer;
-			nextPlayer();
-			return true;
-		}
-		disks[loc] = null;
-		return false;
-	}
 
-	private boolean isEmpty(Disk disk) {
-		return (disk == null);
-	}
-	private boolean isOnBoard(int space) {
-		return space >= 0 && space < NUM_DISKS;
-	}
-	// TODO evaluate if game is over
-	private boolean isOver() {
-		if (passMove()) {
-			nextPlayer();
-			if (passMove()) {
-				return true;
-			}
-		}
-		return false;
-	}
-	private boolean isValidMove(int loc) {
-		return !isOver() && isOnBoard(loc) && isEmpty(disks[loc]);
-	}
 }
