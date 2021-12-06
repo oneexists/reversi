@@ -108,7 +108,7 @@
   		<li>Current Score: DARK ${game.darkScore} - LIGHT ${game.lightScore}</li>
   		<li>Game Over: ${game.over}</li>
   		<c:if test="${game.over}">
-  		<li>Winner: ${game.winner}</li>
+  		<li>Winner: ${(game.winner == null) ? "TIE" : game.winner}</li>
   		</c:if>
   		</ul>
   		<button class="submit" name="quit" >New Game</button>
