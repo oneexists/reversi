@@ -137,6 +137,12 @@ public class Game implements Serializable {
 		}
 		return null;
 	}
+	
+	/**
+	 * Searches board for possible moves and returns possible move locations as an array
+	 * 
+	 * @return moves an array of possible move locations
+	 */
 	public int[] findMoves() {
 		int[] moves = null;
 		for (Rows rows : Rows.values()) {
@@ -175,7 +181,7 @@ public class Game implements Serializable {
 		Arrays.stream(row).forEach(x -> disks[x] = currentPlayer);
 	}
 
-	public Column getColumn(int loc) {
+	private Column getColumn(int loc) {
 		for (Column column : Column.values()) {
 			for (var val : column.column) {
 				if (val == loc) {
@@ -230,10 +236,16 @@ public class Game implements Serializable {
 		return score;
 	}
 	
-	public String getLoc(int loc) {
+	private String getLoc(int loc) {
 		return getColumn(loc).toString() + loc/8;
 	}
 	
+	/**
+	 * Returns the row number for the specified location on the board
+	 * 
+	 * @param loc the location on the board
+	 * @return row the row the location belongs to
+	 */
 	public int getRow(Integer loc) {
 		return 1 + Math.floorDiv(loc, 8);
 	}
@@ -264,6 +276,11 @@ public class Game implements Serializable {
 		return null;
 	}
 	
+	/**
+	 * Returns the disk value of the player with the highest score
+	 * 
+	 * @return winner or {@code null} if a tie
+	 */
 	public Disk getWinner() {
 		if (getDarkScore() > getLightScore()) {
 			return Disk.DARK;
@@ -302,6 +319,11 @@ public class Game implements Serializable {
 		return space >= 0 && space < NUM_DISKS;
 	}
 	
+	/**
+	 * Returns status of the current game
+	 * 
+	 * @return {@code true} iff neither player can make a turn
+	 */
 	public boolean isOver() {
 		if (passMove()) {
 			nextPlayer();
@@ -338,8 +360,7 @@ public class Game implements Serializable {
 	}
 	
 	/**
-	 * Places disk on specified location
-	 * If game is not over, set to next player's turn
+	 * Places disk on specified location and updates to next player's turn
 	 * 
 	 * @param loc location of the disk
 	 */
