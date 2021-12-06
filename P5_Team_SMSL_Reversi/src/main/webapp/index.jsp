@@ -112,7 +112,7 @@
   		</c:if>
   		</ul>
   		<button class="submit" name="quit" >New Game</button>
-  		<c:if test="${pass && !game.over}">
+  		<c:if test="${pass == true}">
   		<button class="submit" name="pass">Pass Move</button>
   		</c:if>
   		</td>

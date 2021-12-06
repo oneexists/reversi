@@ -43,12 +43,17 @@ public class PlayGameServlet extends HttpServlet {
 		String quit = request.getParameter("quit");
 		String loc = request.getParameter("loc");
 		String previousTurn = request.getParameter("lastTurn");
+		String pass = request.getParameter("pass");
 		
 		Game game = ( Game ) request.getSession().getAttribute("game");
 			
 		// verify quit
 		if (quit != null) { 
 			request.getSession().setAttribute("game", new Game()); 
+		} else if (pass != null) {
+			if (pass.equals("true")) {
+				game.nextPlayer();				
+			}
 		} else {
 			// action: take turn
 			int locInt = Integer.parseInt(loc);

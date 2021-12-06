@@ -330,17 +330,25 @@ public class Game implements Serializable {
 		return !isOver() && isOnBoard(loc) && isEmpty(disks[loc]);
 	}
 	
-	private void nextPlayer() {
+	/**
+	 * Sets current player to next player
+	 */
+	public void nextPlayer() {
 		this.currentPlayer = (getCurrentPlayer() == Disk.DARK) ? Disk.LIGHT : Disk.DARK;
 	}
 
+	/**
+	 * Returns the player's ability to pass to the next player
+	 * 
+	 * @return {@code true} if player has no possible moves
+	 */
 	public boolean passMove() {
 		for (Rows rows : Rows.values()) {
 			for (var row : rows.rows) {
 				for (var space : row) {
 					if (disks[space] == null) {
 						List<int[]> foundRow = findRows(space);
-						if (foundRow != null) {
+						if (!foundRow.isEmpty()) {
 							return false;
 						}
 					}
