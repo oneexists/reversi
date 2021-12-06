@@ -42,42 +42,33 @@ public class PlayGameServlet extends HttpServlet {
 		// get data
 		String quit = request.getParameter("quit");
 		String loc = request.getParameter("loc");
-		String showHint = request.getParameter("showHint");
-		String hideHint = request.getParameter("hideHint");
 		String previousTurn = request.getParameter("lastTurn");
 		
 		Game game = ( Game ) request.getSession().getAttribute("game");
 			
-		// verify hint
-		if (showHint != null) {
-			request.setAttribute("hint", true);
-		} else if (hideHint != null) {
-			request.setAttribute("hint", false);
+		// verify quit
+		if (quit != null) { 
+			request.getSession().setAttribute("game", new Game()); 
 		} else {
-			// verify quit
-			if (quit != null) { 
-				request.getSession().setAttribute("game", new Game()); 
+			// action: take turn
+			int locInt = Integer.parseInt(loc);
+			request.setAttribute("lastTurn", game.getTurnString());
+			boolean takeTurn = game.placeDisk(locInt);
+			if (!takeTurn) {
+				request.setAttribute("lastTurn", previousTurn);
+				request.setAttribute("err", "Invalid move");
 			} else {
-				// action: take turn
-				int locInt = Integer.parseInt(loc);
-				request.setAttribute("lastTurn", game.getTurnString());
-				boolean takeTurn = game.placeDisk(locInt);
-				if (!takeTurn) {
-					request.setAttribute("lastTurn", previousTurn);
-					request.setAttribute("err", "Invalid move");
-				} else {
-					request.setAttribute("err", null);
-				}
-				if (game.passMove()) {
-					request.setAttribute("pass", true);
-				} else {
-					request.setAttribute("pass", false);
-				}
-				
-				// store
-				request.getSession().setAttribute("game", game);
-				
-			}			
+				request.setAttribute("err", null);
+			}
+			if (game.passMove()) {
+				request.setAttribute("pass", true);
+			} else {
+				request.setAttribute("pass", false);
+			}
+			
+			// store
+			request.getSession().setAttribute("game", game);
+			
 		}
 		
 		// forward
