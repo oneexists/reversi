@@ -12,14 +12,14 @@ import java.util.logging.Logger;
  */
 public class Game implements Serializable {
 	enum Column {
-		a(new int[] {0, 1, 2, 3, 4, 5, 6, 7}),
-		b(new int[] {8, 9, 10, 11, 12, 13, 14 ,15}),
-		c(new int[] {16, 17, 18, 19, 20, 21, 22, 23}),
-		d(new int[] {24, 25, 26, 27, 28, 29, 30, 31}),
-		e(new int[] {32, 33, 34, 35, 36, 37, 38, 39}),
-		f(new int[] {40, 41, 42, 43, 44, 45, 46, 47}),
-		g(new int[] {48, 49, 50, 51, 52, 53, 54, 55}),
-		h(new int[] {56, 57, 58, 59, 60, 61, 62, 63});
+		a(new int[] {0, 8, 16, 24, 32, 40, 48, 56}),
+		b(new int[] {1, 9, 17, 25, 33, 41, 49, 57}),
+		c(new int[] {2, 10, 18, 26, 34, 42, 50, 58}),
+		d(new int[] {3, 11, 19, 27, 35, 43, 51, 59}),
+		e(new int[] {4, 12, 20, 28, 36, 44, 52, 60}),
+		f(new int[] {5, 13, 21, 29, 37, 45, 53, 61}),
+		g(new int[] {6, 14, 22, 30, 38, 46, 54, 62}),
+		h(new int[] {7, 15, 23, 31, 39, 47, 55, 63});
 
 		private int[] column;
 		
@@ -104,6 +104,7 @@ public class Game implements Serializable {
 	private Disk[] disks;
 	private Disk currentPlayer;
 	private String turnString;
+	private boolean overTheBoard;
 	
 	/**
 	 * No-arg constructor, initializes game
@@ -111,6 +112,7 @@ public class Game implements Serializable {
 	public Game() {
 		disks = new Disk[NUM_DISKS];
 		currentPlayer = Disk.DARK;
+		overTheBoard = false;
 		
 		// set initial pieces
 		disks[27] = Disk.LIGHT;
@@ -186,11 +188,15 @@ public class Game implements Serializable {
 	 * @return Disk.DARK score
 	 */
 	public int getDarkScore() {
-		int score = 0;
-		for (Disk disk : disks) {
-			if (disk == Disk.DARK) { score++; }
+		if (overTheBoard) {
+			return (getDarkScore() > getLightScore()) ? 64 : 0;
+		} else {
+			int score = 0;
+			for (Disk disk : disks) {
+				if (disk == Disk.DARK) { score++; }
+			}
+			return score;			
 		}
-		return score;
 	}
 	
 	/**
@@ -208,11 +214,15 @@ public class Game implements Serializable {
 	 * @return Disk.LIGHT score
 	 */
 	public int getLightScore() {
-		int score = 0;
-		for (Disk disk : disks) {
-			if (disk == Disk.LIGHT) { score++; }
+		if (overTheBoard) {
+			return (getLightScore() > getDarkScore()) ? 64 : 0;
+		} else {
+			int score = 0;
+			for (Disk disk : disks) {
+				if (disk == Disk.LIGHT) { score++; }
+			}
+			return score;
 		}
-		return score;
 	}
 	
 	/**
@@ -267,6 +277,18 @@ public class Game implements Serializable {
 	 * @return winner or {@code null} if a tie
 	 */
 	public Disk getWinner() {
+		// over-the-board score
+		if (getDarkScore() + getLightScore() < 64) {
+			overTheBoard = true;
+			if (getDarkScore() > getLightScore()) {
+				return Disk.DARK;
+			} else if (getLightScore() > getDarkScore()) {
+				return Disk.LIGHT;
+			} else {
+				return null;
+			}
+			
+		} else
 		if (getDarkScore() > getLightScore()) {
 			return Disk.DARK;
 		} else if (getLightScore() > getDarkScore()) {
@@ -348,6 +370,6 @@ public class Game implements Serializable {
 	}
 	
 	private void setTurnString(int loc) {
-		turnString = currentPlayer + " selected " + getColumn(loc).toString() + loc/8 + ".";
+		turnString = currentPlayer + " selected " + getColumn(loc).toString() + (1 + (loc/8)) + ".";
 	}
 }
