@@ -11,9 +11,6 @@ import java.util.logging.Logger;
  *
  */
 public class Game implements Serializable {
-	enum Disk {
-		LIGHT, DARK;
-	}
 	enum Column {
 		a(new int[] {0, 1, 2, 3, 4, 5, 6, 7}),
 		b(new int[] {8, 9, 10, 11, 12, 13, 14 ,15}),
@@ -29,6 +26,9 @@ public class Game implements Serializable {
 		Column(int[] column) {
 			this.column = column;
 		}
+	}
+	enum Disk {
+		LIGHT, DARK;
 	}
 	enum Rows {
 		HORIZONTAL(new int[][] { 
@@ -118,19 +118,6 @@ public class Game implements Serializable {
 		disks[35] = Disk.DARK;
 	}
 
-	public Disk getWinner() {
-		if (getDarkScore() > getLightScore()) {
-			return Disk.DARK;
-		} else if (getLightScore() > getDarkScore()) {
-			return Disk.LIGHT;
-		} else {
-			return null;
-		}
-	}
-	private boolean isOccupied(int loc) {
-		return (disks[loc] != null && disks[loc] != currentPlayer);
-	}
-	
 	private int[] checkRow(int[] row, int loc) {
 		for (int i=0; i<row.length; i++) {
 			if (row[i] == loc) {
@@ -150,33 +137,23 @@ public class Game implements Serializable {
 		}
 		return null;
 	}
-
-	private int[] getRowDown(int[] checkRow) {
-		end: for (int i=checkRow.length-1; i>0; i--) {
-			if (isOccupied(checkRow[i])) {
-				if (disks[checkRow[i-1]] == currentPlayer) {
-					return Arrays.copyOfRange(checkRow, i-1, checkRow.length);
+	public int[] findMoves() {
+		int[] moves = null;
+		for (Rows rows : Rows.values()) {
+			for (var row : rows.rows) {
+				for (int space : row) {
+					if (disks[space] == null) {
+						List<int[]> foundRow = findRows(space);
+						if (!foundRow.isEmpty()) {
+							moves = insertMove(moves, space);
+						}
+					}
 				}
-			} else {
-				break end;
 			}
 		}
-		return null;
+		return moves;
 	}
-
-	private int[] getRowUp(int[] checkRow) {
-		end: for (int i=0; i<checkRow.length-1; i++) {
-			if (isOccupied(checkRow[i])) {
-				if (disks[checkRow[i+1]] == currentPlayer) {
-					return Arrays.copyOfRange(checkRow, 0, i+1);
-				}
-			} else {
-				break end;
-			}
-		}
-		return null;
-	}
-
+	
 	private List<int[]> findRows(int loc) {
 		List<int[]> foundRows = new ArrayList<>();
 		for (Rows rows : Rows.values()) {
@@ -193,11 +170,11 @@ public class Game implements Serializable {
 		}
 		return foundRows;
 	}
-	
+
 	private void flipDisks(int[] row) {
 		Arrays.stream(row).forEach(x -> disks[x] = currentPlayer);
 	}
-	
+
 	public Column getColumn(int loc) {
 		for (Column column : Column.values()) {
 			for (var val : column.column) {
@@ -208,7 +185,7 @@ public class Game implements Serializable {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Returns Disk value of the current player
 	 * 
@@ -216,15 +193,6 @@ public class Game implements Serializable {
 	 */
 	public Disk getCurrentPlayer() {
 		return currentPlayer;
-	}
-	
-	/**
-	 * Returns the disks on the board
-	 * 
-	 * @return the disks
-	 */
-	public Disk[] getDisks() {
-		return disks.clone();
 	}
 	
 	/**
@@ -241,6 +209,15 @@ public class Game implements Serializable {
 	}
 	
 	/**
+	 * Returns the disks on the board
+	 * 
+	 * @return the disks
+	 */
+	public Disk[] getDisks() {
+		return disks.clone();
+	}
+	
+	/**
 	 * Returns the score for the Disk.LIGHT player
 	 * 
 	 * @return Disk.LIGHT score
@@ -253,14 +230,97 @@ public class Game implements Serializable {
 		return score;
 	}
 	
+	public String getLoc(int loc) {
+		return getColumn(loc).toString() + loc/8;
+	}
+	
 	public int getRow(Integer loc) {
 		return 1 + Math.floorDiv(loc, 8);
+	}
+	
+	private int[] getRowDown(int[] checkRow) {
+		end: for (int i=checkRow.length-1; i>0; i--) {
+			if (isOccupied(checkRow[i])) {
+				if (disks[checkRow[i-1]] == currentPlayer) {
+					return Arrays.copyOfRange(checkRow, i-1, checkRow.length);
+				}
+			} else {
+				break end;
+			}
+		}
+		return null;
+	}
+	
+	private int[] getRowUp(int[] checkRow) {
+		end: for (int i=0; i<checkRow.length-1; i++) {
+			if (isOccupied(checkRow[i])) {
+				if (disks[checkRow[i+1]] == currentPlayer) {
+					return Arrays.copyOfRange(checkRow, 0, i+1);
+				}
+			} else {
+				break end;
+			}
+		}
+		return null;
+	}
+	
+	public Disk getWinner() {
+		if (getDarkScore() > getLightScore()) {
+			return Disk.DARK;
+		} else if (getLightScore() > getDarkScore()) {
+			return Disk.LIGHT;
+		} else {
+			return null;
+		}
+	}
+	
+	private int[] insertMove(int[] moves, int newMove) {
+		if (moves == null) {
+			int[] newMoves = new int[1];
+			newMoves[0] = newMove;
+			return newMoves;
+		} else {
+			int[] newMoves = new int[moves.length + 1];
+			for (int i=0; i<moves.length; i++) {
+				newMoves[i] = moves[i];
+			}
+			newMoves[moves.length] = newMove;
+			newMoves = Arrays.stream(newMoves).distinct().toArray();
+			return newMoves;
+		}
+	}
+	
+	private boolean isEmpty(Disk disk) {
+		return (disk == null);
+	}
+
+	private boolean isOccupied(int loc) {
+		return (disks[loc] != null && disks[loc] != currentPlayer);
+	}
+
+	private boolean isOnBoard(int space) {
+		return space >= 0 && space < NUM_DISKS;
+	}
+	
+	public boolean isOver() {
+		if (passMove()) {
+			nextPlayer();
+			if (passMove()) {
+				getWinner();
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private boolean isValidMove(int loc) {
+		return !isOver() && isOnBoard(loc) && isEmpty(disks[loc]);
 	}
 	
 	private void nextPlayer() {
 		this.currentPlayer = (getCurrentPlayer() == Disk.DARK) ? Disk.LIGHT : Disk.DARK;
 	}
-	
+
 	public boolean passMove() {
 		for (Rows rows : Rows.values()) {
 			for (var row : rows.rows) {
@@ -294,65 +354,5 @@ public class Game implements Serializable {
 			return true;
 		}
 		return false;
-	}
-
-	public String getLoc(int loc) {
-		return getColumn(loc).toString() + loc/8;
-	}
-
-	private boolean isEmpty(Disk disk) {
-		return (disk == null);
-	}
-	
-	private boolean isOnBoard(int space) {
-		return space >= 0 && space < NUM_DISKS;
-	}
-	
-	public boolean isOver() {
-		if (passMove()) {
-			nextPlayer();
-			if (passMove()) {
-				getWinner();
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	private boolean isValidMove(int loc) {
-		return !isOver() && isOnBoard(loc) && isEmpty(disks[loc]);
-	}
-
-	private int[] insertMove(int[] moves, int newMove) {
-		if (moves == null) {
-			int[] newMoves = new int[1];
-			newMoves[0] = newMove;
-			return newMoves;
-		} else {
-			int[] newMoves = new int[moves.length + 1];
-			for (int i=0; i<moves.length; i++) {
-				newMoves[i] = moves[i];
-			}
-			newMoves[moves.length] = newMove;
-			newMoves = Arrays.stream(newMoves).distinct().toArray();
-			return newMoves;
-		}
-	}
-	
-	public int[] findMoves() {
-		int[] moves = null;
-		for (Rows rows : Rows.values()) {
-			for (var row : rows.rows) {
-				for (int space : row) {
-					if (disks[space] == null) {
-						List<int[]> foundRow = findRows(space);
-						if (!foundRow.isEmpty()) {
-							moves = insertMove(moves, space);
-						}
-					}
-				}
-			}
-		}
-		return moves;
 	}
 }
