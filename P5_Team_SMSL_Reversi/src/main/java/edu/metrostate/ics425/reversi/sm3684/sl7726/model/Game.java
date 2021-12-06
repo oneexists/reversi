@@ -138,29 +138,7 @@ public class Game implements Serializable {
 		}
 		return null;
 	}
-	
-	/**
-	 * Searches board for possible moves and returns possible move locations as an array
-	 * 
-	 * @return moves an array of possible move locations
-	 */
-	public int[] findMoves() {
-		int[] moves = null;
-		for (Rows rows : Rows.values()) {
-			for (var row : rows.rows) {
-				for (int space : row) {
-					if (disks[space] == null) {
-						List<int[]> foundRow = findRows(space);
-						if (!foundRow.isEmpty()) {
-							moves = insertMove(moves, space);
-						}
-					}
-				}
-			}
-		}
-		return moves;
-	}
-	
+
 	private List<int[]> findRows(int loc) {
 		List<int[]> foundRows = new ArrayList<>();
 		for (Rows rows : Rows.values()) {
@@ -295,22 +273,6 @@ public class Game implements Serializable {
 			return Disk.LIGHT;
 		} else {
 			return null;
-		}
-	}
-	
-	private int[] insertMove(int[] moves, int newMove) {
-		if (moves == null) {
-			int[] newMoves = new int[1];
-			newMoves[0] = newMove;
-			return newMoves;
-		} else {
-			int[] newMoves = new int[moves.length + 1];
-			for (int i=0; i<moves.length; i++) {
-				newMoves[i] = moves[i];
-			}
-			newMoves[moves.length] = newMove;
-			newMoves = Arrays.stream(newMoves).distinct().toArray();
-			return newMoves;
 		}
 	}
 	
