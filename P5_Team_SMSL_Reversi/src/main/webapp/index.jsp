@@ -11,7 +11,6 @@
 	border: 5px black solid;
 	width: 500px;
 }
-
 .space {
 	background-color: green;
 	height: 50px;
@@ -21,7 +20,6 @@
 	vertical-align: middle;
 	text-align: center;
 }
-
 .LIGHT {
 	background-color:white;
 	color: white;
@@ -29,9 +27,7 @@
   	width: 50px;
   	border-radius: 50%;
   	display: inline-block;
-
 }
-
 .DARK {
 	background-color:black;
 	color: black;
@@ -39,6 +35,27 @@
   	width: 50px;
   	border-radius: 50%;
   	display: inline-block;
+}
+
+.game-row {
+  	display: grid;
+  	grid-template-columns: 60px 60px 60px 60px 60px;
+  	grid-template-rows: 30px 30px;
+ 	grid-auto-flow: row;
+ 	height: 15px;
+ 	background-color: green;
+ 	color: black;
+ 	text-align: center;
+}
+
+.item-a {
+  grid-column: 1;
+  grid-row: 1 / 8;
+}
+
+.item-h {
+  grid-column: 8;
+  grid-row: 1 / 8;
 }
 
 
@@ -50,6 +67,18 @@
 </head>
   <body>
   <div class="game">
+  
+  <section class="game-row">
+  <div class="item-a">A</div>
+  <div class="item-b">B</div>
+  <div class="item-c">C</div>
+  <div class="item-d">D</div>
+  <div class="item-e">E</div>
+  <div class="item-f">F</div>
+  <div class="item-g">G</div>
+  <div class="item-h">H</div>
+</section>
+  
   <form action="<c:url value='moveDisk'/>">
   	<table style="background-color:Green; width: 500px;">
   		<tr>
