@@ -82,6 +82,12 @@
   		</c:if>
   		</ul>
   		<button class="submit" name="quit" >New Game</button>
+  		<c:if test="${hint == true}">
+  		<button class="submit" name="hideHint">Hide Hints</button>
+  		</c:if>
+  		<c:if test="${hint != true}">
+  		<button class="submit" name="showHint">Show Hints</button>
+  		</c:if>
   		<c:if test="${pass && !game.over}">
   		<button class="submit" name="pass">Pass Move</button>
   		</c:if>
