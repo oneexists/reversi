@@ -42,7 +42,7 @@
   	grid-template-columns: 60px 60px 60px 60px 60px;
   	grid-template-rows: 30px 30px;
  	grid-auto-flow: row;
- 	height: 15px;
+ 	height: 30px;
  	background-color: green;
  	color: black;
  	text-align: center;
