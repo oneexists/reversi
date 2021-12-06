@@ -79,7 +79,7 @@
   <div class="item-h">H</div>
 </section>
   
-  <form action="<c:url value='moveDisk'/>">
+  <form action="<c:url value='moveDisk'/>" method="post">
   	<table style="background-color:Green; width: 500px;">
   		<tr>
   		<c:forEach items="${game.disks}" var="space" varStatus="stat">
@@ -125,6 +125,7 @@
     	</tr>
     </table>
     </form>
+    ${game.turnString}
     ${err}
     </div>
   </body>

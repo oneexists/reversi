@@ -103,6 +103,7 @@ public class Game implements Serializable {
 	private static final int NUM_DISKS = 64;
 	private Disk[] disks;
 	private Disk currentPlayer;
+	private String turnString;
 	
 	/**
 	 * No-arg constructor, initializes game
@@ -236,10 +237,6 @@ public class Game implements Serializable {
 		return score;
 	}
 	
-	private String getLoc(int loc) {
-		return getColumn(loc).toString() + loc/8;
-	}
-	
 	/**
 	 * Returns the row number for the specified location on the board
 	 * 
@@ -274,6 +271,16 @@ public class Game implements Serializable {
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * Returns the last move's player and location
+	 * 
+	 * @param loc the location of the placed disk
+	 * @return message String of the turn summary
+	 */
+	public String getTurnString() {
+		return turnString;
 	}
 	
 	/**
@@ -369,11 +376,16 @@ public class Game implements Serializable {
 			for (int[] row : findRows(loc)) {
 				flipDisks(row);
 			}
-			LOGGER.info(currentPlayer + " selected " + getLoc(loc) + ".");
+			setTurnString(loc);
+			LOGGER.info(getTurnString());
 			disks[loc] = currentPlayer;
 			nextPlayer();
 			return true;
 		}
 		return false;
+	}
+	
+	private void setTurnString(int loc) {
+		turnString = currentPlayer + " selected " + getColumn(loc).toString() + loc/8 + ".";
 	}
 }

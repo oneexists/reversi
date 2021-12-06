@@ -44,6 +44,7 @@ public class PlayGameServlet extends HttpServlet {
 		String loc = request.getParameter("loc");
 		String showHint = request.getParameter("showHint");
 		String hideHint = request.getParameter("hideHint");
+		String previousTurn = request.getParameter("lastTurn");
 		
 		Game game = ( Game ) request.getSession().getAttribute("game");
 			
@@ -59,8 +60,10 @@ public class PlayGameServlet extends HttpServlet {
 			} else {
 				// action: take turn
 				int locInt = Integer.parseInt(loc);
+				request.setAttribute("lastTurn", game.getTurnString());
 				boolean takeTurn = game.placeDisk(locInt);
 				if (!takeTurn) {
+					request.setAttribute("lastTurn", previousTurn);
 					request.setAttribute("err", "Invalid move");
 				} else {
 					request.setAttribute("err", null);
