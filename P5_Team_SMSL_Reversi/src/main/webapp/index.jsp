@@ -54,6 +54,9 @@
   	<table style="background-color:Green; width: 500px;">
   		<tr>
   		<c:forEach items="${game.disks}" var="space" varStatus="stat">
+  			<c:if test="${stat.count % 8 == 1}">
+  			<td>${game.getRow(stat.count)}</td>
+  			</c:if>
   			<td> 
   			<c:choose>
   			<c:when test="${empty space }">

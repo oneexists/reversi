@@ -253,6 +253,10 @@ public class Game implements Serializable {
 		return score;
 	}
 	
+	public int getRow(Integer loc) {
+		return 1 + Math.floorDiv(loc, 8);
+	}
+	
 	private void nextPlayer() {
 		this.currentPlayer = (getCurrentPlayer() == Disk.DARK) ? Disk.LIGHT : Disk.DARK;
 	}
