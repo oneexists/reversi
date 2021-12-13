@@ -105,7 +105,7 @@
   		<td colspan="16">
   		<ul style="background-color:darkgreen; color:white;">
   		<li>Current Player: ${game.currentPlayer }</li>
-  		<li>Current Score: DARK ${game.darkScore} - LIGHT ${game.lightScore}</li>
+  		<li>Current Score: LIGHT ${game.score[0]} - DARK ${game.score[1]}</li>
   		<li>Game Over: ${game.over}</li>
   		<c:if test="${game.over}">
   		<li>Winner: ${(game.winner == null) ? "TIE" : game.winner}</li>
@@ -119,7 +119,7 @@
     	</tr>
     </table>
     </form>
-    ${game.turnString}
+    ${game.turnString} <br>
     ${err}
     </div>
   </body>

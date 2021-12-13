@@ -104,7 +104,6 @@ public class Game implements Serializable {
 	private Disk[] disks;
 	private Disk currentPlayer;
 	private String turnString;
-	private boolean overTheBoard;
 	
 	/**
 	 * No-arg constructor, initializes game
@@ -112,7 +111,6 @@ public class Game implements Serializable {
 	public Game() {
 		disks = new Disk[NUM_DISKS];
 		currentPlayer = Disk.DARK;
-		overTheBoard = false;
 		
 		// set initial pieces
 		disks[27] = Disk.LIGHT;
@@ -183,20 +181,18 @@ public class Game implements Serializable {
 	}
 	
 	/**
-	 * Returns the score for the Disk.DARK player
+	 * Returns the score for the game
 	 * 
-	 * @return Disk.DARK score
+	 * @return an array of the game score
 	 */
-	public int getDarkScore() {
-		if (overTheBoard) {
-			return (getDarkScore() > getLightScore()) ? 64 : 0;
-		} else {
-			int score = 0;
-			for (Disk disk : disks) {
-				if (disk == Disk.DARK) { score++; }
+	public int[] getScore() {
+		int [] scores = new int[2];
+		for(Disk disk : disks) {
+			if (disk != null) {
+				scores[disk.ordinal()]++;
 			}
-			return score;			
 		}
+		return scores;
 	}
 	
 	/**
@@ -206,23 +202,6 @@ public class Game implements Serializable {
 	 */
 	public Disk[] getDisks() {
 		return disks.clone();
-	}
-	
-	/**
-	 * Returns the score for the Disk.LIGHT player
-	 * 
-	 * @return Disk.LIGHT score
-	 */
-	public int getLightScore() {
-		if (overTheBoard) {
-			return (getLightScore() > getDarkScore()) ? 64 : 0;
-		} else {
-			int score = 0;
-			for (Disk disk : disks) {
-				if (disk == Disk.LIGHT) { score++; }
-			}
-			return score;
-		}
 	}
 	
 	/**
@@ -277,25 +256,10 @@ public class Game implements Serializable {
 	 * @return winner or {@code null} if a tie
 	 */
 	public Disk getWinner() {
-		// over-the-board score
-		if (getDarkScore() + getLightScore() < 64) {
-			overTheBoard = true;
-			if (getDarkScore() > getLightScore()) {
-				return Disk.DARK;
-			} else if (getLightScore() > getDarkScore()) {
-				return Disk.LIGHT;
-			} else {
-				return null;
-			}
-			
-		} else
-		if (getDarkScore() > getLightScore()) {
-			return Disk.DARK;
-		} else if (getLightScore() > getDarkScore()) {
-			return Disk.LIGHT;
-		} else {
-			return null;
-		}
+		int[] score = getScore();
+		if (score[0] > score[1]) { return Disk.LIGHT; }
+		else if (score[1] > score [0]) { return Disk.DARK; } 
+		else { return null; }
 	}
 	
 	private boolean isEmpty(Disk disk) {
