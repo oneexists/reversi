@@ -1,0 +1,50 @@
+.game {
+	background-color: green;
+	border: 5px black solid;
+	width: 500px;
+}
+.space {
+	background-color: green;
+	height: 50px;
+	width: 50px;
+	line-height: 50px;
+	text-align: center;
+	vertical-align: middle;
+	text-align: center;
+}
+.LIGHT {
+	background-color:white;
+	color: white;
+	height: 50px;
+  	width: 50px;
+  	border-radius: 50%;
+  	display: inline-block;
+}
+.DARK {
+	background-color:black;
+	color: black;
+	height: 50px;
+  	width: 50px;
+  	border-radius: 50%;
+  	display: inline-block;
+}
+
+.game-table {
+	margin: auto;
+	color: white;
+}
+
+.table-row {
+	padding: 10px;
+}
+
+.game-row {
+  	display: grid;
+  	grid-template-columns: 60px 60px 60px 60px 60px;
+  	grid-template-rows: 30px 30px;
+ 	grid-auto-flow: row;
+ 	height: 30px;
+ 	background-color: green;
+ 	color: black;
+ 	text-align: center;
+}
