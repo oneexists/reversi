@@ -60,7 +60,7 @@ public class PlayGameServlet extends HttpServlet {
 			
 		if (quit != null) {		// verify quit
 			request.getSession().setAttribute("game", new Game()); 
-		} else if (pass.equals("true")) {	// verify pass
+		} else if (pass != null && pass.equals("true")) {	// verify pass
 			game.nextPlayer();				
 		} else {
 			int locInt = Integer.parseInt(loc);
