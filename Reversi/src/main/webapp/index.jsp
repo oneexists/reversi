@@ -8,15 +8,36 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="styles/styles.css">
 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
 <title> Reversi Game</title>
 </head>
 <body>
+<div class="container">
 <h1> Reversi </h1>
-<div class="game">
   <form action="<c:url value='moveDisk'/>" method="post">
-  	<table class="game-table">
+  	<div class="row">
+  	<div class="col-xs-6">
+  		<button class="btn btn-primary" type="submit" name="quit" >New Game</button>
+  	</div>
+  	<div class="col-xs-6">
+  		<c:if test="${pass == true && !game.over}">
+  			<button type="submit" class="btn btn-primary" name="pass">Pass Move</button>
+  		</c:if>    	
+	   	<c:if test="${game.over}">
+	   		<p>Winner: ${(game.winner == null) ? "TIE" : game.winner}</p>
+	  	</c:if>
+   	</div>
+  	</div>
+  	<br />
+	<div class="game">
+  	<table class="table game-table">
   		<thead>
-  		<tr class="table-row">
+  		<tr>
   			<th></th>
   			<th>A</th>
   			<th>B</th>
@@ -31,7 +52,7 @@
   		<tr>
   		<c:forEach items="${game.disks}" var="space" varStatus="stat">
   		<c:if test="${stat.count % 8 == 1}">
-  			<td class="table-row">${game.getRow(stat.count)}</td>
+  			<td>${game.getRow(stat.count)}</td>
   		</c:if>
   			<td> 
   			<c:choose>
@@ -45,42 +66,36 @@
   			</td>
   		<c:if test="${stat.count % 8 == 0 }">
   		</tr>
-  		
   		</c:if>
   		</c:forEach>
     </table>
-    <br>
-    <p>${game.turnString}</p>
-    <p>${err}</p>
-    <table class="game-table">
-    <tr>
-    	<td>Current Player: </td>
-    	<td>${game.currentPlayer}</td>
-    </tr>
-    <tr>
-    	<td>Current Score: </td>
-    	<td>LIGHT ${game.score[0]} - DARK ${game.score[1]}</td>
-	</tr>    
-	<tr>
-    	<td>Game Over: </td>
-    	<td>${game.over}</td>
-	</tr> 
-  	<c:if test="${game.over}">
-  	<tr>
-  		<td>Winner: </td>
-  		<td>${(game.winner == null) ? "TIE" : game.winner}</td>
-  	</tr>
-  	</c:if>
-  	<tr>
-  		<td><button class="submit" name="quit" >New Game</button></td>
-  		<td>
-  		<c:if test="${pass == true}">
-  			<button class="submit" name="pass">Pass Move</button>
-  		</c:if>
-  		</td>
-  	</tr>
-    </table>
+	</div>
     </form>
+    <br />
+    <div class="scoreboard">
+	    <div class="row">
+			<div class="col-xs-6">
+				<p>${game.turnString}</p>
+			</div>
+			<div class="col-xs-6">
+			    <p>${err}</p>
+			</div>
+	    </div>
+	    <div class="row">
+	    	<div class="col-xs-4">
+	    		<p>Current Player:</p>
+	    		<p>${game.currentPlayer}</p>
+	    	</div>
+	    	<div class="col-xs-4">
+	    		<p>Current Score:</p>
+	    		<p>LIGHT ${game.score[0]} - DARK ${game.score[1]}</p>
+	    	</div>
+	    	<div class="col-xs-4">
+	    		<p>Game Over:</p>
+	    		<p>${game.over}</p>
+	    	</div>
+	    </div>
     </div>
-  </body>
+</div>
+</body>
 </html>
