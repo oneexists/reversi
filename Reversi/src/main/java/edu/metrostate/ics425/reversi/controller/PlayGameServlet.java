@@ -38,8 +38,19 @@ public class PlayGameServlet extends HttpServlet {
 		processRequest(request, response);
 	}
 	
+	/**
+	 * Verifies whether user has requested to quit or pass their turn.
+	 * If not, the user has decided to take a turn and their turn is
+	 * verified. 
+	 * 
+	 * Invalid turns will set the error and update the last turn to 
+	 * the previous turn.
+	 * 
+	 * After the turn has been verified, the board is evaluated to 
+	 * determine whether the user is able to pass their turn and
+	 * the game is saved before the request is forwarded.
+	 */
 	private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// get data
 		String quit = request.getParameter("quit");
 		String loc = request.getParameter("loc");
 		String previousTurn = request.getParameter("lastTurn");
@@ -47,36 +58,30 @@ public class PlayGameServlet extends HttpServlet {
 		
 		Game game = ( Game ) request.getSession().getAttribute("game");
 			
-		// verify quit
-		if (quit != null) { 
+		if (quit != null) {		// verify quit
 			request.getSession().setAttribute("game", new Game()); 
-		} else if (pass != null) {
-			if (pass.equals("true")) {
-				game.nextPlayer();				
-			}
+		} else if (pass.equals("true")) {	// verify pass
+			game.nextPlayer();				
 		} else {
-			// action: take turn
 			int locInt = Integer.parseInt(loc);
 			request.setAttribute("lastTurn", game.getTurnString());
 			boolean takeTurn = game.placeDisk(locInt);
-			if (!takeTurn) {
-				request.setAttribute("lastTurn", previousTurn);
-				request.setAttribute("err", "Invalid move");
-			} else {
+			if (takeTurn) {
+				// successful turn
 				request.setAttribute("err", null);
+			} else {	// invalid turn
+				request.setAttribute("lastTurn", previousTurn);
+				request.setAttribute("err", "Invalid move");				
 			}
-			if (game.passMove()) {
-				request.setAttribute("pass", true);
-			} else {
-				request.setAttribute("pass", false);
-			}
+			// set pass move
+			request.setAttribute("pass", game.passMove());
 			
-			// store
+			// store game
 			request.getSession().setAttribute("game", game);
 			
 		}
 		
-		// forward
+		// forward request
 		request.getRequestDispatcher("/index.jsp").forward(request, response);
 	}
 }
